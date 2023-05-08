@@ -50,16 +50,16 @@ void changeBoard(element (*board)[HEIGHT]) {
             board[x][y] = BLANK_SPACE;
             if (x == player.x && y == player.y) {
                 switch (player.dir) {
-                case RIGHT:
+                case Direction::right:
                     board[x][y] = PLAYER_RIGHT;
                     break;
-                case LEFT:
+                case Direction::left:
                     board[x][y] = PLAYER_LEFT;
                     break;
-                case UP:
+                case Direction::up:
                     board[x][y] = PLAYER_UP;
                     break;
-                case DOWN:
+                case Direction::down:
                     board[x][y] = PLAYER_DOWN;
                     break;
                 }
@@ -67,7 +67,7 @@ void changeBoard(element (*board)[HEIGHT]) {
             else if (board[x][y] == BLANK_SPACE) {
                 for (int i = 0; i < cannons.size(); i++) {
                     if (x == cannons[i].x && y == cannons[i].y) {
-                        if (cannons[i].dir == UP || cannons[i].dir == DOWN) board[x][y] = CANNON_VERTICAL;
+                        if (cannons[i].dir == Direction::up || cannons[i].dir == Direction::down) board[x][y] = CANNON_VERTICAL;
                         else board[x][y] = CANNON_HORIZONTAL;
                     }
                 }
@@ -90,5 +90,5 @@ void drawBoard(element (*board)[HEIGHT]) {
 }
 
 void terminate() {
-    for (auto thread: threads) thread.join();
+    for (std::thread &thread: threads) thread.join();
 }
