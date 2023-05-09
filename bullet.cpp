@@ -44,6 +44,8 @@ void Bullet::fly(element (*board)[HEIGHT]) {
 }
 
 void Bullet::flyAll(element (*board)[HEIGHT]) {
+    std::lock_guard<std::mutex> lock(bulletMutex);
+
     while (true) {
         for (Bullet *bullet: bulletsToDestroy) bullets.erase(std::remove(bullets.begin(), bullets.end(), *bullet));
         for (Bullet &bullet: bullets) {
