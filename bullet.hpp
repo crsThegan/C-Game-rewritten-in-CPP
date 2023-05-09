@@ -13,6 +13,8 @@ class Bullet: public Entity {
 public:
     static void flyAll(element (*board)[HEIGHT]);
     static void create(Entity *shooter);
+
+    bool operator==(const Bullet &right);
 };
 
 extern std::vector<Bullet> bullets;

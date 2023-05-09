@@ -13,15 +13,15 @@ const int INITIAL_HEALTH = 100;
 std::vector<Player> players;
 
 // Entity class getters
-inline int Entity::getX() {
+int Entity::getX() {
     return x;
 }
 
-inline int Entity::getY() {
+int Entity::getY() {
     return y;
 }
 
-inline Direction Entity::getDir() {
+Direction Entity::getDir() {
     return dir;
 }
 

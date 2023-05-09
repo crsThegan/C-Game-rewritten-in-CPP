@@ -24,9 +24,9 @@ protected:
     Direction dir;
 public:
     // basic getters
-    inline int getX();
-    inline int getY();
-    inline Direction getDir();
+    int getX();
+    int getY();
+    Direction getDir();
 };
 
 class Player: public Entity {

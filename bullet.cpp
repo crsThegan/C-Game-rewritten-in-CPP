@@ -58,3 +58,9 @@ void Bullet::create(Entity *shooter) {              // may be invoked by multipl
 
     bullets.push_back(Bullet(shooter));
 }
+
+bool Bullet::operator==(const Bullet &right) {
+    return x == right.x && y == right.y &&
+           dir == right.dir &&
+           distLeft == right.distLeft;
+}
