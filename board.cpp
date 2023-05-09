@@ -24,17 +24,19 @@ int main() {
         system("cls");
     }
 
-    terminate();
+    terminateProgram();
     system("pause");
     return 0;    
 }
 
 void setup(element (*board)[HEIGHT]) {
-    threads.push_back(std::thread(Bullet::flyAll, board));    // bullet thread
-    threads.push_back(std::thread(Cannon::shootAll, board));  // cannon thread
-    threads.push_back(std::thread(player.actionCheck, board));// player thread
+    players.push_back(Player(1, 1, Direction::right));             // new player
 
-    for (int i = 0; i < 5; i++) Cannon::create(WIDTH, HEIGHT / 2 + i, LEFT);
+    threads.push_back(std::thread(Bullet::flyAll, board));         // bullet thread
+    threads.push_back(std::thread(Cannon::fireAll, board));        // cannon thread
+    threads.push_back(std::thread(Player::actionCheckAll, board)); // player thread
+
+    for (int i = 0; i < 5; i++) Cannon::create(WIDTH, HEIGHT / 2 + i, Direction::left);
 
     for (int x = 0; x < WIDTH; x++) {
         for (int y = 0; y < HEIGHT; y++) {
@@ -48,33 +50,35 @@ void changeBoard(element (*board)[HEIGHT]) {
     for (int x = 1; x < WIDTH - 1; x++) {
         for (int y = 1; y < HEIGHT - 1; y++) {
             board[x][y] = BLANK_SPACE;
-            if (x == player.x && y == player.y) {
-                switch (player.dir) {
-                case Direction::right:
-                    board[x][y] = PLAYER_RIGHT;
-                    break;
-                case Direction::left:
-                    board[x][y] = PLAYER_LEFT;
-                    break;
-                case Direction::up:
-                    board[x][y] = PLAYER_UP;
-                    break;
-                case Direction::down:
-                    board[x][y] = PLAYER_DOWN;
-                    break;
+            for (auto &player: players) {
+                if (x == player.getX() && y == player.getY()) {
+                    switch (player.getDir()) {
+                    case Direction::right:
+                        board[x][y] = PLAYER_RIGHT;
+                        break;
+                    case Direction::left:
+                        board[x][y] = PLAYER_LEFT;
+                        break;
+                    case Direction::up:
+                        board[x][y] = PLAYER_UP;
+                        break;
+                    case Direction::down:
+                        board[x][y] = PLAYER_DOWN;
+                        break;
+                    }
                 }
             }
-            else if (board[x][y] == BLANK_SPACE) {
-                for (int i = 0; i < cannons.size(); i++) {
-                    if (x == cannons[i].x && y == cannons[i].y) {
-                        if (cannons[i].dir == Direction::up || cannons[i].dir == Direction::down) board[x][y] = CANNON_VERTICAL;
+            if (board[x][y] == BLANK_SPACE) {
+                for (auto &cannon: cannons) {
+                    if (x == cannon.getX() && y == cannon.getY()) {
+                        if (cannon.getDir() == Direction::up || cannon.getDir() == Direction::down) board[x][y] = CANNON_VERTICAL;
                         else board[x][y] = CANNON_HORIZONTAL;
                     }
                 }
             }
             else if (board[x][y] == BLANK_SPACE) {
-                for (int i = 0; i < bullets.size(); i++) {
-                    if (x == bullets[i].x && y == bullets[i].y) board[x][y] = BULLET;
+                for (auto &bullet: bullets) {
+                    if (x == bullet.getX() && y == bullet.getY()) board[x][y] = BULLET;
                 }
             }
         }
@@ -89,6 +93,6 @@ void drawBoard(element (*board)[HEIGHT]) {
     }
 }
 
-void terminate() {
+void terminateProgram() {
     for (std::thread &thread: threads) thread.join();
 }

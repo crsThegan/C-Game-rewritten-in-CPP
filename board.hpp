@@ -23,4 +23,4 @@ extern const int GAME_TICK;
 void setup(element (*board)[HEIGHT]);
 void changeBoard(element (*board)[HEIGHT]);
 void drawBoard(element (*board)[HEIGHT]);
-void terminate();
+void terminateProgram();
