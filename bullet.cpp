@@ -15,10 +15,39 @@ std::mutex bulletMutex; // needed to make sure that the 'bullets' vector is not 
                         // multiple threads simultaneously
 
 Bullet::Bullet(Entity *shooter) {
-    x = shooter->getX();
-    y = shooter->getY();
+    x = 0;
+    y = 0;
     dir = shooter->getDir();
     distLeft = BULLET_RANGE;
+
+    switch (dir) {
+    case Direction::right:
+        if (board[shooter->getX() + 1][shooter->getY()] == BLANK_SPACE) {
+            x = shooter->getX() + 1;
+            y = shooter->getY();
+        }
+        break;
+    case Direction::left:
+        if (board[shooter->getX() - 1][shooter->getY()] == BLANK_SPACE) {
+            x = shooter->getX() - 1;
+            y = shooter->getY();
+        }
+        break;
+    case Direction::up:
+        if (board[shooter->getX()][shooter->getY() + 1] == BLANK_SPACE) {
+            x = shooter->getX();
+            y = shooter->getY() + 1;
+        }
+        break;
+    case Direction::down:
+        if (board[shooter->getX()][shooter->getY() - 1] == BLANK_SPACE) {
+            x = shooter->getX();
+            y = shooter->getY() - 1;
+        }
+        break;
+    }
+
+    distLeft--;
 }
 
 void Bullet::fly(element (*board)[HEIGHT]) {
