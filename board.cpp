@@ -77,10 +77,8 @@ void changeBoard(element (*board)[HEIGHT]) {
                     }
                 }
             }
-            else if (board[x][y] == BLANK_SPACE) {
-                for (auto *bullet: bullets) {
-                    if (x == bullet->getX() && y == bullet->getY()) board[x][y] = BULLET;
-                }
+            for (auto *bullet: bullets) {
+                if (x == bullet->getX() && y == bullet->getY()) board[x][y] = BULLET;
             }
         }
     }
@@ -93,7 +91,7 @@ void drawBoard(element (*board)[HEIGHT]) {
         puts(boardStr[y]);
     }
 
-    sprintf(tempbuf, "%d", bullets.size());
+    if (bullets.size() > 0) sprintf(tempbuf, "%d %d %d", bullets.size(), bullets[0]->getX(), bullets[0]->getY());
     puts(tempbuf);
 }
 
