@@ -10,7 +10,7 @@ class Cannon: public Entity {
     Cannon(int x, int y, Direction dir);
     void shoot(element (*board)[HEIGHT]);
 public:
-    static const int RELOAD_TIME = 500;
+    static const int RELOAD_TIME = 1000;
     static void create(int x, int y, Direction dir);
     static void fireAll(element (*board)[HEIGHT]);
 };

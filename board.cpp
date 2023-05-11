@@ -13,13 +13,14 @@ element board[WIDTH][HEIGHT];
 std::vector<std::thread> threads;
 const int GAME_TICK = 40;
 
+char tempbuf[256] = {0};
+
 int main() {
     setup(board);
 
     while (true) {
         changeBoard(board);
         drawBoard(board);
-
         std::this_thread::sleep_for(std::chrono::milliseconds(GAME_TICK));
         system("cls");
     }
@@ -36,7 +37,7 @@ void setup(element (*board)[HEIGHT]) {
     threads.push_back(std::thread(Cannon::fireAll, board));        // cannon thread
     threads.push_back(std::thread(Player::actionCheckAll, board)); // player thread
 
-    for (int i = 0; i < 5; i++) Cannon::create(WIDTH, HEIGHT / 2 + i, Direction::left);
+    for (int i = 0; i < 6; i++) Cannon::create(WIDTH - 2, HEIGHT / 2 + i, Direction::left);
 
     for (int x = 0; x < WIDTH; x++) {
         for (int y = 0; y < HEIGHT; y++) {
@@ -77,8 +78,8 @@ void changeBoard(element (*board)[HEIGHT]) {
                 }
             }
             else if (board[x][y] == BLANK_SPACE) {
-                for (auto &bullet: bullets) {
-                    if (x == bullet.getX() && y == bullet.getY()) board[x][y] = BULLET;
+                for (auto *bullet: bullets) {
+                    if (x == bullet->getX() && y == bullet->getY()) board[x][y] = BULLET;
                 }
             }
         }
@@ -91,6 +92,9 @@ void drawBoard(element (*board)[HEIGHT]) {
         for (int x = 0; x < WIDTH; x++) boardStr[y][x] = board[x][y];
         puts(boardStr[y]);
     }
+
+    sprintf(tempbuf, "%d", bullets.size());
+    puts(tempbuf);
 }
 
 void terminateProgram() {

@@ -24,3 +24,5 @@ void setup(element (*board)[HEIGHT]);
 void changeBoard(element (*board)[HEIGHT]);
 void drawBoard(element (*board)[HEIGHT]);
 void terminateProgram();
+
+extern char tempbuf[];

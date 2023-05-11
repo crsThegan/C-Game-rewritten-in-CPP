@@ -57,6 +57,9 @@ void Player::actionCheck(element (*board)[HEIGHT]) {
             dir = Direction::down;
             moveOnBoard(board);
             break;
+        case SHOOT_KEY:
+            shoot();
+            break;
         }
     }
 }
@@ -81,6 +84,6 @@ void Player::moveOnBoard(element (*board)[HEIGHT]) {
 void Player::actionCheckAll(element (*board)[HEIGHT]) {
     while (1) {
         for (auto &player: players) player.actionCheck(board);
-        std::this_thread::sleep_for(std::chrono::milliseconds(GAME_TICK));
+        std::this_thread::sleep_for(std::chrono::milliseconds(GAME_TICK * 2));
     }
 }

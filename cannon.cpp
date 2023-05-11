@@ -17,7 +17,6 @@ Cannon::Cannon(int x, int y, Direction dir) {
 void Cannon::shoot(element (*board)[HEIGHT]) {
     Bullet::create(this);
 }
-
 void Cannon::create(int x, int y, Direction dir) {
     cannons.push_back(Cannon(x, y, dir));
 }

@@ -1,7 +1,6 @@
 #include "bullet.hpp"
 #include "player.hpp"
 #include "board.hpp"
-#include "cannon.hpp"
 
 #include <vector>
 #include <mutex>
@@ -9,7 +8,7 @@
 
 const int BULLET_RANGE = 5;
 
-std::vector<Bullet> bullets;
+std::vector<Bullet *> bullets;
 std::vector<Bullet *> bulletsToDestroy;
 
 std::mutex bulletMutex; // needed to make sure that the 'bullets' vector is not being modified by
@@ -44,21 +43,29 @@ void Bullet::fly(element (*board)[HEIGHT]) {
 }
 
 void Bullet::flyAll(element (*board)[HEIGHT]) {
-    std::lock_guard<std::mutex> lock(bulletMutex);
+    //std::lock_guard<std::mutex> lock(bulletMutex);
 
     while (true) {
-        for (Bullet *bullet: bulletsToDestroy) bullets.erase(std::remove(bullets.begin(), bullets.end(), *bullet));
-        for (Bullet &bullet: bullets) {
-            bullet.fly(board);
-            --bullet.distLeft;
+        bulletMutex.lock();
+        for (Bullet *bullet: bulletsToDestroy) {
+            bullets.erase(std::find(bullets.begin(), bullets.end(), bullet)); 
+            delete bullet;
         }
+        bulletsToDestroy.clear();
+        for (Bullet *bullet: bullets) {
+            bullet->fly(board);
+            --bullet->distLeft;
+        }
+        bulletMutex.unlock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(GAME_TICK));
+
+        //sprintf(tempbuf, "Bullet::flyAll is working\n");
     }
 }
 
 void Bullet::create(Entity *shooter) {              // may be invoked by multiple threads
     std::lock_guard<std::mutex> lock(bulletMutex);
-
-    bullets.push_back(Bullet(shooter));
+    bullets.push_back(new Bullet(shooter));
 }
 
 bool Bullet::operator==(const Bullet &right) {

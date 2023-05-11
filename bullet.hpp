@@ -17,4 +17,4 @@ public:
     bool operator==(const Bullet &right);
 };
 
-extern std::vector<Bullet> bullets;
+extern std::vector<Bullet *> bullets;
